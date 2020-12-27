@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon name="chevron-back-outline" (click)="back()"></ion-icon>
+    </ion-buttons>
+    <ion-title>Add User</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="gp_create">
+    
+      <ion-item style="display: flex;flex-wrap: wrap;padding: 8px 0;">
+        <div style="max-width: 180px;display: flex;flex-wrap: wrap;">
+          <div *ngFor="let selUser of selectedUser" style="width: fit-content;">
+            <ion-badge color="medium" style="margin: 0px 3px">{{selUser.name}}</ion-badge>
+          </div>
+        </div>
+        <ion-input placeholder="Enter User Email" [(ngModel)]="email" (input)="handleUserSearch($event)" style="min-width: 100px;"></ion-input>
+      </ion-item>
+      <ion-item class="gray_input"> User Suggestion </ion-item>
+     
+        <ion-item *ngFor="let user of suggestedUser">
+          <img class="def_user" style="
+              width: 30px;
+              height: 30px;
+              margin-right: 30px;
+              border-radius: 50%;
+            " src="assets/user.png" alt="Default User" />
+          <ion-label>{{user.name}}</ion-label>
+          <ion-checkbox slot="end" (ionChange)="updateCheck(user)"></ion-checkbox>
+        </ion-item>
+      <!-- <ion-item *ngFor="let user of user_name">
+        <img class="def_user" src="assets/user.png" alt="Default User">
+        {{user}}
+      </ion-item> -->
+
+      <!-- <ion-button [disabled]="isDisabled" (click)="handleClick()"
+        >Create</ion-button
+      >
+      <ion-button (click)="dismiss()">Cancel</ion-button> -->
+    
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-button style="display: flex;" (click)="addUser()">Add</ion-button>
+</ion-footer>

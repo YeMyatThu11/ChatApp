@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="loadData($event)"  >
+    <ion-infinite-scroll-content loadingSpinner="bubbles" >
+
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+    <ion-grid >
+      <ion-row *ngFor="let message of messages | async">
+        <ion-col size="10"
+          [offset]="message.myMsg ? 2 : 0"
+          > 
+          <ion-card  class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }">
+            <img [src]="message.profile" class="profile" alt="">
+            <div class="msg_content" *ngIf="!message.msg.includes('data:image/jpeg;base64')">
+              <b>{{ message.fromName }}</b><br>
+              <span>{{ message.msg }}</span>
+            </div>
+            <div class="msg_content" *ngIf="message.msg.includes('data:image/jpeg;base64')">
+              <img [src]="message.msg" alt="message photo">
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <!-- <ion-toolbar color="light">
+    <ion-row class="ion-align-items-center">
+      <ion-col size="10">
+        <ion-textarea autoGrow="true" class="message-input" rows="1" maxLength="500" [(ngModel)]="newMsg" >
+        </ion-textarea>
+      </ion-col>
+      <ion-col size="2">
+        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
+          class="msg-btn" (click)="sendMessage()">
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar> -->
+  <ion-item>
+    <ion-button (click)="sendImage()">
+        Image
+    </ion-button>
+    <ion-input  [(ngModel)]="newMsg"></ion-input>
+    
+    <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
+          class="msg-btn" (click)="sendMessage()">
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+  </ion-item>
+</ion-footer>

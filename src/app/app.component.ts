@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
+import { FirestoreService } from './services/firestore.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -12,43 +13,44 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
+   
     {
-      title: 'Inbox',
-      url: '/folder/Inbox',
+      title: 'Messages',
+      url: '/messages',
       icon: 'mail'
+     
     },
     {
-      title: 'Outbox',
-      url: '/folder/Outbox',
-      icon: 'paper-plane'
+      title: 'Profile',
+      url: '/profile',
+      icon: 'person'
     },
     {
-      title: 'Favorites',
-      url: '/folder/Favorites',
+      title: 'Public Groups',
+      url: '/groups',
       icon: 'heart'
     },
     {
-      title: 'Archived',
+      title: 'Private Groups',
+      url: '/private-group',
+      icon: 'heart'
+    }, 
+    {
+      title: 'Logout',
       url: '/folder/Archived',
-      icon: 'archive'
+      icon: 'log-out'
     },
-    {
-      title: 'Trash',
-      url: '/folder/Trash',
-      icon: 'trash'
-    },
-    {
-      title: 'Spam',
-      url: '/folder/Spam',
-      icon: 'warning'
-    }
+    
+   
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+  
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private chatService: FirestoreService, 
+    private router: Router
   ) {
     this.initializeApp();
   }
@@ -64,6 +66,17 @@ export class AppComponent implements OnInit {
     const path = window.location.pathname.split('folder/')[1];
     if (path !== undefined) {
       this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
+    }
+  }
+  signOut() {
+    this.chatService.signOut().then(() => {
+      this.router.navigateByUrl('/', { replaceUrl: true });
+    });
+  }
+  handleClick(i){
+    this.selectedIndex = i;
+    if(this.appPages[i].title=='Logout'){
+      this.signOut();
     }
   }
 }

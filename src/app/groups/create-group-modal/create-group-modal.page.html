@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+     <ion-icon name="chevron-back-outline" (click)="handleBack()"></ion-icon>
+    </ion-buttons>
+    <ion-title>Create New Group</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="gp_create ">
+    <ion-item>
+      <img src="assets/group.png" class="def_img" alt="">
+      <ion-input [(ngModel)]="name" placeholder="Group Name"></ion-input>
+    </ion-item>
+   
+    <div *ngIf="privateRoom">
+      <ion-item class="gray_input">
+        <ion-input  (input)="handleUserSearch($event)" placeholder="Add User"></ion-input>
+      </ion-item>
+      <ion-item *ngFor="let user of user_name">
+        <img class="def_user" src="assets/user.png" alt="Default User">
+        {{user}}
+      </ion-item>
+      
+    </div>
+    <ion-item>
+      <ion-input [(ngModel)]="description" placeholder="Add Description"></ion-input>
+    </ion-item>
+    <ion-button [disabled]=isDisabled (click)="handleClick()">Create</ion-button>
+      <ion-button  (click)="dismiss()">Cancel</ion-button>
+   
+</div>
+</ion-content>
+

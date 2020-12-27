@@ -1,0 +1,39 @@
+ion-grid{
+    padding: 0;
+}
+.profile_wrapper{
+    background: #3498db;
+    height: 64px;
+   
+    text-align: center;
+    z-index: 1;
+    width: 100%;
+    
+}
+.group_def{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: -85px;
+    text-align: center;
+    z-index: 101;
+    padding: 12px;
+    background: #000;
+}
+.add-people{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+   
+    margin-top: -5px;
+    
+    margin-right: 14px;
+
+}
+.def_people{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 14px;
+    object-fit: contain;
+}

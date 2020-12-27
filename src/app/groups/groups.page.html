@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Groups Chat</ion-title>
+</ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="no_group" class="no_group">
+    <img src="assets/not_found.png" alt="not found">
+      <p class="not_found">No group was found ..</p>
+      <ion-button (click)="handleCreateBtn()" class="ion-text-center">Create</ion-button>
+  </div>
+  <ion-row *ngFor="let room of rooms | async">
+    <ion-col size="12" class="ion-text-center" (click)="goToMessage(room.id,room.name)">
+      <ion-card>
+        <div style="display: flex;flex-direction: column;">
+            <p>{{room.name}}</p>
+           <p>{{room.description}}</p>
+        </div>
+      </ion-card>
+    </ion-col>
+   
+  </ion-row>
+</ion-content>
+<ion-footer >
+  <ion-button style="display: flex;" (click)="handleCreateBtn()" class="ion-text-center">Create</ion-button>
+</ion-footer>

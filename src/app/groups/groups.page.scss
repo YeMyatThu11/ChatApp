@@ -1,0 +1,9 @@
+.no_group{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+    .not_found{
+       text-align: center;
+    }
+}

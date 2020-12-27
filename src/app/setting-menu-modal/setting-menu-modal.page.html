@@ -1,0 +1,50 @@
+<!-- <ion-grid>
+  <ion-toolbar>
+    <div class="profile_wrapper">
+      <img src="assets/group.png" alt=""> 
+    </div>
+  </ion-toolbar>
+</ion-grid> -->
+
+<ion-content>
+    <ion-grid>
+      <ion-row class="profile_wrapper">
+        <ion-col size="12">
+          <img class="group_def" src="assets/group.png" alt=""> 
+        </ion-col>
+      </ion-row>
+      <ion-row style="margin-top:40px;text-align: center;padding: 10px;">
+        <ion-col size="12"><span style="font-size: 19px;">{{room_name}}</span></ion-col>
+      </ion-row>
+      <ion-row style="text-align: center;margin-top: -10px;"  *ngIf="user | async as user">
+        <ion-col size="12"><span style="font-size: 11px;">Created By {{user.name}}</span></ion-col>
+      </ion-row>
+      <ion-row style="text-align: center;">
+        <ion-col size="12">
+         <span>{{currentRoom.memberNameList.length}} Participants</span>
+        </ion-col>
+        <ion-col size="12" (click)="goToAddPeople()"> 
+          <ion-item>
+            <img src="assets/add_people.jpg" class="add-people" alt="Add People">
+            <p>Add People</p>
+          </ion-item>
+        </ion-col>
+        <ion-col  size="12">
+          <ion-list *ngFor="let user of currentRoom.memberNameList">
+            <ion-item>
+              <img src="assets/user.png"class="def_people"  alt="User">
+              {{user}}
+            </ion-item>
+          </ion-list>
+          
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+   
+      
+   
+
+</ion-content>
+<ion-footer style="display: flex;">
+  <ion-button style="flex:1" (click)="cancel()">Cancel</ion-button>
+</ion-footer>
