@@ -29,7 +29,7 @@ export class SettingMenuModalPage implements OnInit {
     this.room_name=this.navParams.data["room_name"];
     this.user=this.chatService.getUserById(this.currentRoom.createdBy);
     console.log(this.user);
-    
+    this.getSinglePrivatgeRoom();
     
   }
   async goToAddPeople(){
@@ -41,10 +41,19 @@ export class SettingMenuModalPage implements OnInit {
       },
     })
     await modal.present();
+    
     const {data}=await modal.onDidDismiss();
+    if(data){
+      this.getSinglePrivatgeRoom();
+    }
   }
   cancel(){
     this.modalCtrl.dismiss();
   }
-
+  getSinglePrivatgeRoom(){
+    this.chatService.getSinglePrivateRoom(this.room_id).subscribe(data=>{
+      this.currentRoom=data;
+      console.log(this.currentRoom)
+    });
+  }
 }

@@ -7,6 +7,17 @@
     margin-top: 0px;
     --padding-start: 8px;
 }
+.message_card{
+    display: flex;
+
+}
+.profile{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+   object-fit: cover;
+    margin-right: 10px;
+}
  
 .message {
     width: 100%;
@@ -17,22 +28,16 @@
     margin-bottom: 5px;
     white-space: pre-wrap;
     display: flex;
+    flex-direction: column;
+    
     line-break: anywhere;
-    .profile{
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-       object-fit: cover;
-        margin-right: 10px;
-    }
+    justify-content: space-around;
+   
 }
 ion-content{
     --background:#F8F9FC;
 }
-.msg_content{
-   
 
-}
 .my-message {
     background: var(--ion-color-tertiary);
     color: #fff;

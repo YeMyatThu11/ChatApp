@@ -36,6 +36,10 @@ export class GroupSettingPage implements OnInit {
     console.log('room id',this.room_id);
     
   }
+  ionViewWillLeave(){
+    this.suggestedUser.map(user=>user.checked=false);
+    console.log('view leave')
+  }
   updateCheck(user){
     user.checked=!user.checked;
     if(user.checked){
@@ -78,13 +82,18 @@ export class GroupSettingPage implements OnInit {
       console.log(this.newMember);
       this.chatService.addMemberToPrivateRoom(this.room_id,this.newMember,newMemberNameList);
       this.subscription.unsubscribe();
+      this.modalCtrl.dismiss(
+        {'dismissed': true}
+      );
     });
     
   }
   back(){
     this.suggestedUser.map(user=>user.checked=false);
     console.log('changed',this.suggestedUser)
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss(
+      {'dismissed': true}
+    )
    
   }
 

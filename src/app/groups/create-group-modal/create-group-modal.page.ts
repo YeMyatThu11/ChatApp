@@ -8,6 +8,7 @@ import { FirestoreService } from '../../services/firestore.service';
 })
 export class CreateGroupModalPage implements OnInit {
   name: string;
+  email;
   description: string;
   isDisabled = true;
   search_user:any;
@@ -63,6 +64,7 @@ export class CreateGroupModalPage implements OnInit {
         this.user_id_list.push(this.search_user.uid)
         console.log(this.search_user)
         console.log(this.user_id_list);
+        this.email=""
       })
     }
   }

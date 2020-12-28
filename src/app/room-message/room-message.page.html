@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>{{room_name}}</ion-title>
-    <ion-icon *ngIf="oneToOneChat" slot="end" (click)="goToSetting()" name="settings-outline" style="padding: 0 10px;font-size: 21px;"></ion-icon>
+    <ion-icon *ngIf="checkOneToOne()" slot="end" (click)="goToSetting()" name="settings-outline" style="padding: 0 10px;font-size: 21px;"></ion-icon>
   </ion-toolbar>
   
 </ion-header>
@@ -16,20 +16,20 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll> -->
     <ion-grid >
-      <ion-row *ngFor="let message of messages | async">
+      <ion-row style="margin-top: 20px;" *ngFor="let message of messages | async">
         <ion-col size="10"
           [offset]="message.myMsg ? 2 : 0"
           > 
-          <ion-card  class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }">
+          <div class="message_card">
             <img [src]="message.profile" class="profile" alt="">
-            <div class="msg_content" *ngIf="!message.msg.includes('data:image/jpeg;base64')">
+            <ion-card class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="!message.msg.includes('data:image/jpeg;base64')">
               <b>{{ message.fromName }}</b><br>
               <span>{{ message.msg }}</span>
-            </div>
-            <div class="msg_content" *ngIf="message.msg.includes('data:image/jpeg;base64')">
+            </ion-card>
+            <div class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="message.msg.includes('data:image/jpeg;base64')">
               <img [src]="message.msg" alt="message photo">
             </div>
-          </ion-card>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -51,9 +51,9 @@
     </ion-row>
   </ion-toolbar> -->
   <ion-item>
-    <!-- <ion-button (click)="sendImage()">
-        Image
-    </ion-button> -->
+   
+      <ion-icon  (click)="sendImage()" style="margin-right: 10px;" name="image-outline"></ion-icon>
+    
     <ion-input  [(ngModel)]="newMsg"></ion-input>
     
     <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
