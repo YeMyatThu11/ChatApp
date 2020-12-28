@@ -3,60 +3,34 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Messages</ion-title>
-  </ion-toolbar>
+    <ion-title>Private Chat</ion-title>
+</ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="loadData($event)"  >
-    <ion-infinite-scroll-content loadingSpinner="bubbles" >
-
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
-    <ion-grid >
-      <ion-row *ngFor="let message of messages | async">
-        <ion-col size="10"
-          [offset]="message.myMsg ? 2 : 0"
-          > 
-          <ion-card  class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }">
-            <img [src]="message.profile" class="profile" alt="">
-            <div class="msg_content" *ngIf="!message.msg.includes('data:image/jpeg;base64')">
-              <b>{{ message.fromName }}</b><br>
-              <span>{{ message.msg }}</span>
-            </div>
-            <div class="msg_content" *ngIf="message.msg.includes('data:image/jpeg;base64')">
-              <img [src]="message.msg" alt="message photo">
-            </div>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-</ion-content>
-
-<ion-footer>
-  <!-- <ion-toolbar color="light">
-    <ion-row class="ion-align-items-center">
-      <ion-col size="10">
-        <ion-textarea autoGrow="true" class="message-input" rows="1" maxLength="500" [(ngModel)]="newMsg" >
-        </ion-textarea>
-      </ion-col>
-      <ion-col size="2">
-        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
-          class="msg-btn" (click)="sendMessage()">
-          <ion-icon name="send" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-toolbar> -->
-  <ion-item>
-    <ion-button (click)="sendImage()">
-        Image
-    </ion-button>
-    <ion-input  [(ngModel)]="newMsg"></ion-input>
-    
-    <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
-          class="msg-btn" (click)="sendMessage()">
-          <ion-icon name="send" slot="icon-only"></ion-icon>
-        </ion-button>
+<ion-content>
+  <ion-searchbar [(ngModel)]="keyword" debounce="1500" (ionInput)="onSearch($event)" (ionCancel)="onCancel()" class="unicode">
+  </ion-searchbar>
+  <ion-item *ngIf="search_user" (click)="goToMessage(search_user)">
+    <img [src]="search_user.profile" style="width: 40px;height: 40px;border-radius: 50%;margin: 15px 30px 15px 0;object-fit: cover;"  alt="user">
+    <p>{{search_user.name}}</p>
   </ion-item>
-</ion-footer>
+  <ion-list *ngFor="let user of users |async" >
+      <ion-item (click)="goToMessage(user)">
+        <img [src]="user.profile" style="width: 40px;height: 40px;border-radius: 50%;margin: 15px 30px 15px 0;object-fit: cover;" alt="">
+        {{user.name}}
+      </ion-item>
+  </ion-list>
+  <!-- <ion-row *ngFor="let room of rooms | async">
+    <ion-col size="12" class="ion-text-center"  (click)="goToMessage(room.id,room.name,room)" >
+        <div class="profile_wrapper">
+          <div *ngIf="isProfileDefault(room.profile)">
+            <img src="assets/group.png" class="def_profile" alt="Default Profiole">
+          </div>
+          <div class="profile_txt">
+            <p>{{room.name}}</p>
+           <p style="font-size: 14px;"> {{room.desc}}</p>
+          </div>
+        </div>
+    </ion-col>
+  </ion-row> -->
+</ion-content>

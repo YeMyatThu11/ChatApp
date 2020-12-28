@@ -15,6 +15,7 @@ export class RoomMessagePage implements OnInit {
   room_name:string;
   created_by;
   newMsg = '';
+  oneToOneChat:false;
   messages:Observable<any>
   constructor(
     private aRoute: ActivatedRoute,
@@ -25,12 +26,13 @@ export class RoomMessagePage implements OnInit {
     this.aRoute.params.subscribe(data=>{
      this.room_id=data.room_id;
      this.room_name=data.room_name;
-    
+      this.oneToOneChat=data.oneToOneChat;
     })
   }
 
   ngOnInit() {
     this.getMessages();
+    console.log(this.oneToOneChat)
   }
   sendMessage() {
     console.log('room',this.room_id);

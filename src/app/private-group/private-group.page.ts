@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { FirestoreService ,Room} from '../services/firestore.service';
 import {CurrentRoomService} from '../current-room.service';
 import { Router  } from "@angular/router";
+import { FindValueSubscriber } from 'rxjs/internal/operators/find';
 
 @Component({
   selector: 'app-private-group',
@@ -58,7 +59,7 @@ export class PrivateGroupPage implements OnInit {
   goToMessage(room_id,name,room){
     console.log('room',room)
     this.curRoomService.setRoom(room);
-    this.router.navigate(['room-message',{room_id:room_id,room_name:name}])
+    this.router.navigate(['room-message',{room_id:room_id,room_name:name,oneToOneChat:false}])
   }
   isProfileDefault(profile){
     if(profile=="default"){

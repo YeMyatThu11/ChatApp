@@ -3,12 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { FirestoreService } from '../services/firestore.service';
-import { Router } from '@angular/router';
-import { Camera, CameraOptions, PictureSourceType } from '@ionic-native/Camera/ngx';
-import { ActionSheetController, ToastController, Platform, LoadingController } from '@ionic/angular';
-import { File, FileEntry } from '@ionic-native/File/ngx';
-import { FilePath } from '@ionic-native/file-path/ngx';
-import { map } from 'rxjs/operators';
+import { Router  } from "@angular/router";
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.page.html',
@@ -17,98 +12,52 @@ import { map } from 'rxjs/operators';
 
 export class MessagesPage implements OnInit {
   @ViewChild(IonContent) content: IonContent;
- 
+  search_user:any;
   messages: Observable<any[]>;
   newMsg = '';
+  keyword;
+  users:Observable<any[]>;
+  currentUser;
+  currentuserId;
   logoImage: any;
-
-  constructor(
-    private chatService: FirestoreService,
-     private router: Router,
-     private actionSheet: ActionSheetController,
-     private toastController: ToastController,
-     private plt: Platform, 
-     private loadingController: LoadingController,
-     private camera: Camera,
-     private file: File,
-     private filePath: FilePath
-
+  privateRoomId;
+    constructor(
+        private chatService: FirestoreService,
+        private router:Router
      ) { }
  
-  ngOnInit() {
-    this.messages = this.chatService.getChatMessages();
-    
-  }
-  sendMessage() {
-    this.chatService.first=true;
-    this.chatService.addChatMessage(this.newMsg).then(() => {
-      this.newMsg = '';
-      // this.messages=this.chatService.getChatMessages();
-    });
-  }
- 
-  signOut() {
-    this.chatService.signOut().then(() => {
-      this.router.navigateByUrl('/', { replaceUrl: true });
-    });
-  }
-  async sendImage(){
-    const actionSheet = await this.actionSheet.create({
-      header: 'Choose Camera or Gallery',
-      buttons: [{
-        text: 'Gallery',
-        role: 'destructive',
-        icon: 'image',
-        handler: () => {
-          this.takePhoto(this.camera.PictureSourceType.PHOTOLIBRARY);
-        }
-      }, {
-        text: 'Camera',
-        icon: 'camera',
-        handler: () => {
-          this.takePhoto(this.camera.PictureSourceType.CAMERA)
-        }
-      }, {
-        text: 'Cancel',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-        }
-      }]
-    });
-    await actionSheet.present();
-}
-async takePhoto(sourceType: number) {
-  
-  const options: CameraOptions = {
-    quality: 50,
-    destinationType: this.camera.DestinationType.DATA_URL,
-    encodingType: this.camera.EncodingType.JPEG,
-    mediaType: this.camera.MediaType.PICTURE,
-    correctOrientation: true,
-    sourceType: sourceType,
-  }
- 
-  this.camera.getPicture(options).then((imageData) => {
-      this.logoImage = 'data:image/jpeg;base64,' + imageData;
-      this.chatService.addChatMessage(this.logoImage).then(() => {
-        
-        // this.content.scrollToBottom();
+    ngOnInit() {
+      this.users=this.chatService.getUsers();
+      this.chatService.getUserById(this.chatService.currentUser.uid).subscribe(data=>{
+        this.currentUser=data;
+        console.log(this.currentUser)
       });
-      console.log(this.logoImage)
-  }, (err) => {
-    console.log('error',err)
-  });
-}
-loadData(e){
-  console.log('aa');
-  this.chatService.first=false;
-  this.messages.pipe(map(m=>{
-    return m.push(this.chatService.getChatMessages())
-  }))  
-  console.log(this.messages)
-  setTimeout(()=>{
-    e.target.complete();
-  },800)
-}
+    }
+    onSearch(e){
+      if (e.target.value.includes("@gmail.com")) {
+        this.chatService.getUserWithMail(e.target.value).subscribe(data => {
+            [this.search_user]=data;
+            this.keyword="";
+        })
+      }
+    }
+    goToMessage(user){
+      if(user.uid>this.chatService.currentUser.uid){
+        this.privateRoomId=this.chatService.currentUser.uid+user.uid;
+        console.log('privarte room id',this.privateRoomId);
+      }
+      else{
+        this.privateRoomId=user.uid+this.chatService.currentUser.uid;
+        console.log('privarte room id',this.privateRoomId);
+      }
+      this.currentuserId=this.chatService.currentUser.uid;
+      let userIdList=[this.currentuserId,user.uid];
+      let memberNameList=[this.currentUser.name,user.name];
+      
+      console.log(this.chatService.currentUser);
+      console.log(memberNameList);
+      console.log(this.currentuserId)
+      this.chatService.addPrivateRoomWithId('Private User Chat','desc','onetoone',this.currentuserId,userIdList,"default",memberNameList,userIdList);
+      this.router.navigate(['room-message',{room_id:this.privateRoomId,room_name:user.name,oneToOneChat:true}])
+    }
 }

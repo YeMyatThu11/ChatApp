@@ -21,14 +21,12 @@
         <img class="def_user" src="assets/user.png" alt="Default User">
         {{user}}
       </ion-item>
-      
     </div>
     <ion-item>
       <ion-input [(ngModel)]="description" placeholder="Add Description"></ion-input>
     </ion-item>
     <ion-button [disabled]=isDisabled (click)="handleClick()">Create</ion-button>
       <ion-button  (click)="dismiss()">Cancel</ion-button>
-   
-</div>
+  </div>
 </ion-content>
 

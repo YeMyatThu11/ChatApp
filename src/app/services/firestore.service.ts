@@ -113,8 +113,21 @@ export class FirestoreService {
       profile:profile,
       type:type,
       memberNameList:memberNameList
-
     });
+  }
+  addPrivateRoomWithId(name,desc,type,ownerId,userIdList,profile,memberNameList,customId){
+    const privateRoom:any= this.afs.doc(`privateRoom/${customId}`);
+    privateRoom.set({
+     name:name,
+     desc:desc,
+     recentMessage:this.recentMessage,
+     createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+     createdBy:ownerId,
+     members:userIdList,
+     profile:profile,
+     type:type,
+     memberNameList:memberNameList
+   });
   }
  
   addMemberToPrivateRoom(roomId,userList,newMemberNameList){
@@ -129,7 +142,7 @@ export class FirestoreService {
     return privateRoom.valueChanges();
   }
   getPrivateRoom(uid){
-    const privateRoom:AngularFirestoreCollection=this.afs.collection('privateRoom',ref=>ref.where('members','array-contains',uid).orderBy('createdAt').limit(10))
+    const privateRoom:AngularFirestoreCollection=this.afs.collection('privateRoom',ref=>ref.where('members','array-contains',uid).where("type","==","private").orderBy('createdAt').limit(10))
    
     return privateRoom.snapshotChanges().pipe(
       map(arr=>{
@@ -235,12 +248,8 @@ export class FirestoreService {
     )
     
   }
-  
-
-  
-
    getUsers() {
-    return this.afs.collection('users').valueChanges({ idField: 'uid' }) as Observable<User[]>;
+    return this.afs.collection('users',ref=>ref.orderBy('name')).valueChanges({ idField: 'uid' }) as Observable<User[]>;
   }
   getUserById(uid){
     return this.afs.doc(`users/${uid}`).valueChanges();
@@ -257,4 +266,5 @@ export class FirestoreService {
   getUserWithMail(mail:string){
       return this.afs.collection('users',ref=>ref.where('email','==',mail)).valueChanges()
   }
+ 
 }

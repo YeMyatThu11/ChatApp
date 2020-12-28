@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>{{room_name}}</ion-title>
-    <ion-icon slot="end" (click)="goToSetting()" name="settings-outline" style="padding: 0 10px;font-size: 21px;"></ion-icon>
+    <ion-icon *ngIf="oneToOneChat" slot="end" (click)="goToSetting()" name="settings-outline" style="padding: 0 10px;font-size: 21px;"></ion-icon>
   </ion-toolbar>
   
 </ion-header>

@@ -42,7 +42,6 @@ export class CreateGroupModalPage implements OnInit {
             'dismissed': true,
             'register': true
           });
-        
     }
     else{
         const userId = this.chatService.currentUser.uid;
@@ -55,7 +54,6 @@ export class CreateGroupModalPage implements OnInit {
         }
       )
     }
-    
   }
   handleUserSearch(e){
     if (e.target.value.includes("@gmail.com")) {
@@ -79,5 +77,4 @@ export class CreateGroupModalPage implements OnInit {
       'dismissed': true
     });
   }
-  
 }
