@@ -31,7 +31,7 @@
         </ion-col>
         <ion-col  size="12">
           <ion-list *ngFor="let user of currentRoom.memberNameList">
-            <ion-item>
+            <ion-item (click)="removeUser(user)">
               <img src="assets/user.png"class="def_people"  alt="User">
               {{user}}
             </ion-item>

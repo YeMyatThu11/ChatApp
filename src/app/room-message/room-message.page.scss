@@ -35,11 +35,11 @@
    
 }
 ion-content{
-    --background:#F8F9FC;
+    --background:#F2F2F2;
 }
 
 .my-message {
-    background: var(--ion-color-tertiary);
+    background: #707070;
     color: #fff;
 }
  
@@ -54,3 +54,30 @@ ion-content{
     float: right;
     font-size: small;
 }
+.btn_upload{
+    width: 83px;
+    height: 83px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 33px 13px;
+    border: 1px solid #eee;
+    border: 1px solid #000;
+    margin: 13px;
+}
+.downloadLink{
+    width: 100%;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #fff;
+}
+.btn_design{
+    border: none;
+    background: #707070;
+    color: #fff;
+}
+

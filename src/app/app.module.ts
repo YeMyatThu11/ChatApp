@@ -12,6 +12,8 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/File/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+
 //firebase
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -43,6 +45,7 @@ import { ScrollableDirective } from './scrollable.directive';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
+    FileChooser,
     File,
     FilePath
     

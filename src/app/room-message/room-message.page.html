@@ -21,14 +21,27 @@
           [offset]="message.myMsg ? 2 : 0"
           > 
           <div class="message_card">
-            <img [src]="message.profile" class="profile" alt="">
-            <ion-card class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="!message.msg.includes('data:image/jpeg;base64')">
-              <b>{{ message.fromName }}</b><br>
+            <img *ngIf="!message.myMsg" [src]="message.profile" class="profile" alt="">
+            <ion-card class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="isSimpleMessage(message)">
+              <div style="display: flex; justify-content: space-between;padding-bottom: 10px;">
+                <b>{{ message.fromName }}</b> <span style="font-size: 9px;">{{calCurrentTime(message.createdAt)}}</span>
+              </div>
               <span>{{ message.msg }}</span>
             </ion-card>
             <div class="message" [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="message.msg.includes('data:image/jpeg;base64')">
               <img [src]="message.msg" alt="message photo">
             </div>
+            <ion-card  class="message"   [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }" *ngIf="message.msg.includes('https://firebasestorage.googleapis.com')">
+              
+              <div *ngIf="message.metadata !== undefined">
+                <div style="display: flex; justify-content: space-between;padding-bottom: 10px;">
+                  <b style="font-size: 17px;">{{ message.metadata.name.slice(0,15)+"..." }}</b> <span style="font-size: 9px;">{{calCurrentTime(message.createdAt)}}</span>
+                </div>
+               
+                <span>{{changeToMB(message.metadata.size)}} MB</span>  
+              </div>
+              <a class="downloadLink" download [href]="message.msg" >Download</a>
+            </ion-card>
           </div>
         </ion-col>
       </ion-row>
@@ -50,13 +63,21 @@
       </ion-col>
     </ion-row>
   </ion-toolbar> -->
+  <ion-item *ngIf="isFileopen==true">
+    <input type="file" id="fileUpload" (change)="detectFiles($event)" hidden>
+    <label for="fileUpload" class="btn_upload" style="width: 55px;"><img src="assets/upload.png" style="width: 20px;height: 20px;" alt="upload"></label>
+    <span  class="btn_upload btn_design" style="width:150px;">{{fileName}}</span>
+    <button (click)="uploadSingle()">Send</button>
+  </ion-item>
   <ion-item>
    
       <ion-icon  (click)="sendImage()" style="margin-right: 10px;" name="image-outline"></ion-icon>
+      <ion-icon name="folder-outline" (click)="openFile()" style="margin-right: 10px;" ></ion-icon>
+     
+
+      <ion-input  [(ngModel)]="newMsg"></ion-input>
     
-    <ion-input  [(ngModel)]="newMsg"></ion-input>
-    
-    <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
+        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
           class="msg-btn" (click)="sendMessage()">
           <ion-icon name="send" slot="icon-only"></ion-icon>
         </ion-button>

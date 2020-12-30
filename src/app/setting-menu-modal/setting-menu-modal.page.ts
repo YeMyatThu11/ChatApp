@@ -56,4 +56,16 @@ export class SettingMenuModalPage implements OnInit {
       console.log(this.currentRoom)
     });
   }
+  removeUser(user){
+    if(this.chatService.currentUser.uid==this.currentRoom.createdBy){
+      this.currentRoom.memberNameList=this.currentRoom.memberNameList.filter(u=>u!=user);
+      let removedUser:any;
+      this.chatService.getUserWithName(user).subscribe(data=>{
+        [removedUser]=data;
+        this.currentRoom.members=this.currentRoom.members.filter(uid=>uid!==removedUser.uid);
+      this.chatService.removeMemberFromPrivateRoom(this.room_id,this.currentRoom.members,this.currentRoom.memberNameList)
+      });
+    }
+    
+  }
 }

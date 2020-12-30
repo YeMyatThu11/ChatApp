@@ -23,6 +23,7 @@ export interface Message {
   fromName: string;
   myMsg: boolean;
   profile:string;
+  metadata:any;
 }
 export interface Room{
     createdAt:firebase.firestore.FieldValue;
@@ -137,6 +138,13 @@ export class FirestoreService {
       memberNameList:newMemberNameList
     })
   }
+  removeMemberFromPrivateRoom(roomId,userList,memberNameList){
+    const privateRoom:AngularFirestoreDocument=this.afs.doc(`privateRoom/${roomId}`);
+    privateRoom.update({
+      member:userList,
+      memberNameList:memberNameList
+    })
+  }
   getSinglePrivateRoom(roomId){
     const privateRoom:AngularFirestoreDocument=this.afs.doc(`privateRoom/${roomId}`);
     return privateRoom.valueChanges();
@@ -171,7 +179,16 @@ export class FirestoreService {
     return this.afs.collection(`room-messages/${roomID}/messages`).add({
       createdAt:firebase.firestore.FieldValue.serverTimestamp(),
       from:uid,
-      msg:msg
+      msg:msg,
+      metadata:{}
+    })
+  }
+  addRoomMessageWithFileMetadata(roomId,msg,uid,metadata){
+    return this.afs.collection(`room-messages/${roomId}/messages`).add({
+      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
+      from:uid,
+      msg:msg,
+      metadata:metadata
     })
   }
   getRoomMessage(roomID){
@@ -254,7 +271,10 @@ export class FirestoreService {
   getUserById(uid){
     return this.afs.doc(`users/${uid}`).valueChanges();
   }
-
+  getUserWithName(userName){
+    const usrCollection:AngularFirestoreCollection=this.afs.collection('users',ref=>ref.where('name','==',userName));
+    return usrCollection.valueChanges();
+  }
    getUserForMsg(msgFromId, users: User[]) {
     for (let usr of users) {
       if (usr.uid == msgFromId) {
@@ -264,7 +284,8 @@ export class FirestoreService {
     return ['Mg Mg'];
   }
   getUserWithMail(mail:string){
-      return this.afs.collection('users',ref=>ref.where('email','==',mail)).valueChanges()
+      return this.afs.collection('users',ref=>ref.where('email','==',mail)).valueChanges();
   }
+  
  
 }
