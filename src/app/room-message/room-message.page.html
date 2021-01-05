@@ -40,7 +40,7 @@
                
                 <span>{{changeToMB(message.metadata.size)}} MB</span>  
               </div>
-              <a class="downloadLink" download [href]="message.msg" >Download</a>
+              <button (click)="downloadFile(message.msg)">Download</button>
             </ion-card>
           </div>
         </ion-col>

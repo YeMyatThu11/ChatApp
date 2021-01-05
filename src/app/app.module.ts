@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
+//plug in
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -13,6 +14,7 @@ import { File } from '@ionic-native/File/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { Downloader } from '@ionic-native/downloader/ngx';
 
 //firebase
 import { AngularFireModule } from '@angular/fire';
@@ -47,7 +49,8 @@ import { ScrollableDirective } from './scrollable.directive';
     Camera,
     FileChooser,
     File,
-    FilePath
+    FilePath,
+    Downloader
     
   ],
   

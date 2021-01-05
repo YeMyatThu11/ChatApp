@@ -12,9 +12,8 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import firebase from 'firebase';
 import * as moment from 'moment';
-import { buffer } from 'rxjs/operators';
 import { snapshotChanges } from '@angular/fire/database';
-
+import { Downloader, DownloadRequest } from '@ionic-native/downloader/ngx';
 @Component({
   selector: 'app-room-message',
   templateUrl: './room-message.page.html',
@@ -45,7 +44,8 @@ export class RoomMessagePage implements OnInit {
     private camera: Camera,
     // private file: File,
     private filePath: FilePath,
-    private fileChooser:FileChooser
+    private fileChooser:FileChooser,
+    private downloader:Downloader
 
   ) {
     this.aRoute.params.subscribe(data => {
@@ -262,6 +262,30 @@ export class RoomMessagePage implements OnInit {
         });
       });
     });
+  }
+  downloadFile(url){
+    if(url){
+      console.log(url);
+      let request:DownloadRequest={
+        uri:url,
+        title:'MyFile',
+        description: '',
+        mimeType: '',
+        visibleInDownloadsUi: true,
+        destinationInExternalFilesDir: {
+            dirType: 'Downloads',
+            subPath: 'MyFile.apk'
+        }
+      }
+      this.downloader.download(request).then(location=>{
+        console.log('file downloaded at ',location);
+      }).catch(error=>{
+        console.log('error',error)
+      })
+      
+        
+      
+    }
   }
   changeToMB(byte){
     return Math.round(byte/1024/1024 *100)/100
