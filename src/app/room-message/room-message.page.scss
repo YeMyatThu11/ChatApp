@@ -1,83 +1,109 @@
 .message-input {
-    width: 100%;
-    border: 1px solid var(--ion-color-medium);
-    border-radius: 6px;
-    background: #fff;
-    resize: none;
-    margin-top: 0px;
-    --padding-start: 8px;
+  width: 100%;
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 6px;
+  background: #fff;
+  resize: none;
+  margin-top: 0px;
+  --padding-start: 8px;
 }
-.message_card{
-    display: flex;
+.message_card {
+  display: flex;
+}
+.profile {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  margin-right: 10px;
+}
 
-}
-.profile{
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-   object-fit: cover;
-    margin-right: 10px;
-}
- 
 .message {
-    width: 100%;
-    padding: 10px !important;
-    border-radius: 10px !important;
-    --background: #fff;
-    margin:0;
-    margin-bottom: 5px;
-    white-space: pre-wrap;
-    display: flex;
-    flex-direction: column;
-    
-    line-break: anywhere;
-    justify-content: space-around;
-   
+  width: 100%;
+  padding: 10px !important;
+  border-radius: 10px !important;
+  --background: #fff;
+  margin: 0;
+  margin-bottom: 5px;
+  white-space: pre-wrap;
+  display: flex;
+  flex-direction: column;
+
+  line-break: anywhere;
+  justify-content: space-around;
 }
-ion-content{
-    --background:#F2F2F2;
+ion-content {
+  --background: #f2f2f2;
 }
 
 .my-message {
-    background: #707070;
-    color: #fff;
-}
- 
-.other-message {
-    --background: #fff;
-    width: 100%;
-    color: #000;
-}
- 
-.time {
-    color: #dfdfdf;
-    float: right;
-    font-size: small;
-}
-.btn_upload{
-    width: 83px;
-    height: 83px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 33px 13px;
-    border: 1px solid #eee;
-    border: 1px solid #000;
-    margin: 13px;
-}
-.downloadLink{
-    width: 100%;
-    color: #000;
-    text-decoration: none;
-    text-align: center;
-    margin-top: 20px;
-    padding-top: 10px;
-    border-top: 1px solid #000;
-}
-.btn_design{
-    border: none;
-    background: #707070;
-    color: #fff;
+  background: #707070;
+  color: #fff;
 }
 
+.other-message {
+  --background: #fff;
+  width: 100%;
+  color: #000;
+}
+
+.time {
+  color: #dfdfdf;
+  float: right;
+  font-size: small;
+}
+.btn_upload {
+  width: 40px;
+  height: 83px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 33px 13px;
+  border: 1px solid #eee;
+  border: 1px solid #000;
+  margin: 13px;
+}
+.downloadLink {
+  width: 100%;
+  color: #000;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #000;
+}
+.my-downloadLink {
+  width: 100%;
+
+  text-decoration: none;
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 10px;
+  color: #fff;
+  border-top: 1px solid #fff;
+}
+.btn_design {
+  border: none;
+  background: #808080;
+  color: #fff;
+  position: relative;
+  border-radius: 8px;
+}
+.file_icon{
+    width: 30px;
+    height: 30px;
+    display: block;
+    position: absolute;
+    left: 10px;
+    margin-top: -3px;
+}
+.file-cancel{
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    color: #fff;
+    right: 10px;
+    top: 6px;
+
+}

@@ -27,6 +27,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { ScrollableDirective } from './scrollable.directive';
 
+import { NgCircleProgressModule } from 'ng-circle-progress';
+
 @NgModule({
   declarations: [AppComponent, ScrollableDirective],
   entryComponents: [],
@@ -40,7 +42,17 @@ import { ScrollableDirective } from './scrollable.directive';
     AngularFireStorageModule,
     AngularFirestoreModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgCircleProgressModule.forRoot({
+      // set defaults here
+      radius: 20,
+      outerStrokeWidth: 4,
+      innerStrokeWidth: 2,
+      outerStrokeColor: "#78C000",
+      innerStrokeColor: "#C7E596",
+      animationDuration: 1000,
+      
+    })
   ],
   providers: [
     StatusBar,

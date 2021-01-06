@@ -40,9 +40,37 @@
                
                 <span>{{changeToMB(message.metadata.size)}} MB</span>  
               </div>
-              <button (click)="downloadFile(message.msg)">Download</button>
+              <span (click)="downloadFile(message.msg, message.metadata)" [ngClass]="{ 'my-downloadLink': message.myMsg, 'downloadLink': !message.myMsg }" class="downloadLink">Download</span>
             </ion-card>
+            <!-- progress bar -->
+            
           </div>
+        </ion-col>
+      </ion-row>
+      <ion-row style="margin-top: 20px;" *ngIf="progressbar">
+        <ion-col size="10" offset='2'>
+          <ion-card  class="message my-message"  >
+             
+            <div >
+              <div style="display: flex; justify-content: space-between;padding-bottom: 10px;">
+                <b style="font-size: 17px;">{{ fileName}}</b> <span style="font-size: 9px;">a few second ago</span>
+              </div>
+             
+              
+            </div>
+            <!-- <ion-progress-bar [value]="progressbar"></ion-progress-bar> -->
+            <div style="display: flex;justify-content: center;">
+              <circle-progress
+              [percent]="progressbar"
+              [radius]="40"
+              [animation]="false"
+              [titleColor]="'#fff'"
+              [subtitleColor]="'#fff'"
+              [unitsColor]="'#fff'"
+            ></circle-progress>
+            </div>
+            
+          </ion-card>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -64,10 +92,14 @@
     </ion-row>
   </ion-toolbar> -->
   <ion-item *ngIf="isFileopen==true">
-    <input type="file" id="fileUpload" (change)="detectFiles($event)" hidden>
+    <input type="file" id="fileUpload" (change)="detectFiles($event)" multiple hidden>
     <label for="fileUpload" class="btn_upload" style="width: 55px;"><img src="assets/upload.png" style="width: 20px;height: 20px;" alt="upload"></label>
-    <span  class="btn_upload btn_design" style="width:150px;">{{fileName}}</span>
-    <button (click)="uploadSingle()">Send</button>
+    <div *ngIf="isFileChoosen" class="btn_upload btn_design" style="width: -webkit-fill-available;display: flex;justify-content: space-around;">
+      <ion-icon name="close-circle-outline" (click)="fileCancel()" class="file-cancel"></ion-icon>
+      <ion-icon name="document-outline" class="file_icon"></ion-icon>
+      <span>{{fileName}}</span>
+    </div>
+    
   </ion-item>
   <ion-item>
    
@@ -76,8 +108,7 @@
      
 
       <ion-input  [(ngModel)]="newMsg"></ion-input>
-    
-        <ion-button expand="block" fill="clear" color="primary" [disabled]="newMsg === ''"
+        <ion-button expand="block" fill="clear" color="primary" [disabled]="checkMsgEmpty()"
           class="msg-btn" (click)="sendMessage()">
           <ion-icon name="send" slot="icon-only"></ion-icon>
         </ion-button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams, AlertController,NavController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { FirestoreService} from '../services/firestore.service';
 import {CurrentRoomService} from '../current-room.service';
@@ -18,7 +18,9 @@ export class SettingMenuModalPage implements OnInit {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private chatService: FirestoreService,
-    private curRoomService:CurrentRoomService
+    private curRoomService:CurrentRoomService,
+    private alertCtrl: AlertController,
+    private navCtrl: NavController
   ) { 
     
   }
@@ -66,6 +68,38 @@ export class SettingMenuModalPage implements OnInit {
       this.chatService.removeMemberFromPrivateRoom(this.room_id,this.currentRoom.members,this.currentRoom.memberNameList)
       });
     }
-    
+  }
+  async deleteChatGroup(){
+    const alert = await this.alertCtrl.create({
+      header:"Delete Room",
+      message:"Are You Sure You Want To Delete?",
+      buttons:[
+        {
+          text: 'Cancel',
+          handler: () => {
+            this.alertCtrl.dismiss();
+          }
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            if(this.isOwner()){
+              this.chatService.deleteSinglePrivateRoom(this.room_id);
+              this.navCtrl.pop();
+              this.modalCtrl.dismiss();
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+  isOwner(){
+    if(this.chatService.currentUser.uid==this.currentRoom.createdBy){
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

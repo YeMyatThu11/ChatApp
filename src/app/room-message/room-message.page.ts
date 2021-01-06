@@ -33,6 +33,11 @@ export class RoomMessagePage implements OnInit {
   isFileopen=false;
   isFileChoosen=false;
   file:File;
+  progressbar:number;
+  isFileSend=false;
+  
+  progressSize;
+  progressMetadata:any;
   constructor(
     private aRoute: ActivatedRoute,
     private router: Router,
@@ -62,10 +67,17 @@ export class RoomMessagePage implements OnInit {
   sendMessage() {
     console.log('room', this.room_id);
     console.log('user', this.chatService.currentUser.uid);
-
-    this.chatService.addRoomMessage(this.room_id, this.newMsg, this.chatService.currentUser.uid).then(() => {
-      this.newMsg = '';
-    });
+    if(!this.isFileSend){
+      this.chatService.addRoomMessage(this.room_id, this.newMsg, this.chatService.currentUser.uid).then(() => {
+        this.newMsg = '';
+      });
+    }
+    else{
+      this.isFileSend=false;
+      this.isFileopen=false;
+      this.uploadTask = this.upload(this.file)
+    }
+   
   }
   getMessages() {
     this.messages = this.chatService.getRoomMessage(this.room_id);
@@ -221,26 +233,33 @@ export class RoomMessagePage implements OnInit {
     else if (fileExt == 'MOV') return { type: 'video/quicktime'};
   }
   detectFiles(e){
-    this.isFileChoosen=!this.isFileChoosen;
+    this.isFileSend=true;
+    this.isFileChoosen=true;
     this.selectedFiles=e.target.files;
     this.file = this.selectedFiles.item(0);
-     let fileFrag=this.file.name.split(" ");
-     this.fileName=fileFrag[0]+" "+fileFrag[1]+" ...";
+    
+     this.fileName=this.file.name.slice(0,15)+'...';  
      console.log(this.fileName)
   }
-  uploadSingle() {
-    this.uploadTask = this.upload(this.file)
-  }
+ 
   upload(file: File) {
+    console.log(this.progressbar)
     const storageRef = firebase.storage().ref().child(`file/${this.file.name}`);
     const uploadTask = storageRef.put(file);
     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,(snapshot)=>{
-
+      console.log('snapshot',snapshot.metadata);
+      this.progressbar=snapshot.bytesTransferred/snapshot.totalBytes *100;
+      if(this.progressbar==100){
+        this.progressbar-=1;
+      }
+      console.log(this.progressbar)
     },
     (err)=>{
 
     },
     ()=>{
+      
+      this.progressbar=null;
       let metadata;
       storageRef.getMetadata().then(function(m){
         console.log(m.size);
@@ -251,7 +270,6 @@ export class RoomMessagePage implements OnInit {
           name:m.name,
           type:m.contentType
         }
-        
       })
 
       storageRef.getDownloadURL().then(url=>{
@@ -263,18 +281,18 @@ export class RoomMessagePage implements OnInit {
       });
     });
   }
-  downloadFile(url){
+  downloadFile(url,metadata){
     if(url){
-      console.log(url);
+      console.log(url,metadata);
       let request:DownloadRequest={
         uri:url,
-        title:'MyFile',
+        title:metadata.name,
         description: '',
-        mimeType: '',
+        mimeType: metadata.type,
         visibleInDownloadsUi: true,
         destinationInExternalFilesDir: {
-            dirType: 'Downloads',
-            subPath: 'MyFile.apk'
+            dirType: 'Download',
+            subPath: ''
         }
       }
       this.downloader.download(request).then(location=>{
@@ -282,9 +300,6 @@ export class RoomMessagePage implements OnInit {
       }).catch(error=>{
         console.log('error',error)
       })
-      
-        
-      
     }
   }
   changeToMB(byte){
@@ -293,5 +308,19 @@ export class RoomMessagePage implements OnInit {
   openFile(){
     this.isFileopen=!this.isFileopen;
   }
-    
+  checkMsgEmpty(){
+    if(this.newMsg === ''){
+      if(!this.isFileChoosen){
+        return true
+      }
+    }
+    else{
+      return false
+    }
+  }
+  fileCancel(){
+    this.isFileSend=false;
+    this.isFileChoosen=false;
+    this.file=null;
+  }
 }

@@ -149,9 +149,12 @@ export class FirestoreService {
     const privateRoom:AngularFirestoreDocument=this.afs.doc(`privateRoom/${roomId}`);
     return privateRoom.valueChanges();
   }
+  deleteSinglePrivateRoom(roomId){
+    const privateRoom:AngularFirestoreDocument=this.afs.doc(`privateRoom/${roomId}`);
+    privateRoom.delete();
+  }
   getPrivateRoom(uid){
     const privateRoom:AngularFirestoreCollection=this.afs.collection('privateRoom',ref=>ref.where('members','array-contains',uid).where("type","==","private").orderBy('createdAt').limit(10))
-   
     return privateRoom.snapshotChanges().pipe(
       map(arr=>{
         return arr.map(snap=>{
