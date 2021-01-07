@@ -1,0 +1,14 @@
+<ion-slides #slides>
+  <ion-slide *ngFor="let imgUrl of imageUrl">
+    <ion-row>
+      <ion-col size="12">
+        <img
+          [src]="imgUrl.url"
+          alt="Image"
+          style="width: 100%; border-radius: 5px; height: 90%"
+          (click)="selectStamp(imgUrl.url)"
+        />
+      </ion-col>
+    </ion-row>
+  </ion-slide>
+</ion-slides>

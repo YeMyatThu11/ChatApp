@@ -29,24 +29,20 @@
             <p>Add People</p>
           </ion-item>
         </ion-col>
-        <ion-col  size="12">
+        <ion-col  size="12" class="userList">
           <ion-list *ngFor="let user of currentRoom.memberNameList">
-            <ion-item (click)="removeUser(user)">
+            <ion-item >
               <img src="assets/user.png"class="def_people"  alt="User">
               {{user}}
+              <ion-badge color="medium" class="remove_badge" *ngIf="showRemoverBadge"  (click)="removeUser(user)">remove</ion-badge>
             </ion-item>
           </ion-list>
-          
         </ion-col>
         <ion-col  size="12" *ngIf="isOwner()" (click)="deleteChatGroup()" class="delete_room" >
           Delete Room
         </ion-col>
       </ion-row>
     </ion-grid>
-   
-      
-   
-
 </ion-content>
 <ion-footer style="display: flex;">
   <ion-button style="flex:1" (click)="cancel()">Cancel</ion-button>

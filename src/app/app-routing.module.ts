@@ -39,7 +39,15 @@ const routes: Routes = [
   {
     path: 'setting-menu-modal',
     loadChildren: () => import('./setting-menu-modal/setting-menu-modal.module').then( m => m.SettingMenuModalPageModule)
+  },  {
+    path: 'high-chart',
+    loadChildren: () => import('./high-chart/high-chart.module').then( m => m.HighChartPageModule)
   },
+  {
+    path: 'phone-auth',
+    loadChildren: () => import('./phone-auth/phone-auth.module').then( m => m.PhoneAuthPageModule)
+  },
+
   
 ];
 

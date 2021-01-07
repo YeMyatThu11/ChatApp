@@ -1,22 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component } from '@angular/core';
 import * as HighCharts from 'highcharts';
-@Component({
-  selector: 'app-profile',
-  templateUrl: './profile.page.html',
-  styleUrls: ['./profile.page.scss'],
-})
-export class ProfilePage implements OnInit {
 
+@Component({
+  selector: 'app-high-chart',
+  templateUrl: 'high-chart.page.html',
+  styleUrls: ['high-chart.page.scss'],
+})
+export class HighChartPage {
   constructor() { }
 
-  ngOnInit() {
-  }
   ionViewDidEnter() {
     this.plotSimpleBarChart();
   }
+
   plotSimpleBarChart() {
-    let categoryArr = ['25/12/2020','26/12/2020','27/12/2020','28/12/2020','30/12/2020','31/12/2020','1/1/2021','2/1/2021','3/1/2021','4/1/2021','5/1/2021','6/1/2021'];
+    let categoryArr = ['A','A','A','A','A','A','A','A','A','A','A','A'];
     let myChart = HighCharts.chart('highcharts', {
       colors: ['#777777'],
       credits: {
@@ -29,7 +27,7 @@ export class ProfilePage implements OnInit {
         type: 'line'
       },
       title: {
-        text: 'User Usage',
+        text: 'Fruit Consumption',
       },
       tooltip: {
         backgroundColor: '#777777',
@@ -40,7 +38,7 @@ export class ProfilePage implements OnInit {
       xAxis: {
         categories: categoryArr,
         lineColor: '#333333',
-        lineWidth: 0,
+        lineWidth: 1,
         labels: {
           enabled: false,
   
@@ -80,5 +78,4 @@ export class ProfilePage implements OnInit {
         }]
     });
   }
-
 }

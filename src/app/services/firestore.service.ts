@@ -76,6 +76,14 @@ export class FirestoreService {
       name:name
     })
   }
+  async signUpWithPhNo(uid,email,name):Promise<any>{
+    return this.afs.doc(`users/${uid}`).set({
+      uid,
+      email:email,
+      profile:`http://gravatar.com/avatar/${md5.appendStr(email).end()}?d=identicon`,
+      name:name
+    })
+  }
 
   signIn({ email, password }) {
     return this.afAuth.signInWithEmailAndPassword(email, password);

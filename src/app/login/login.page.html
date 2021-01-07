@@ -33,19 +33,20 @@
       <span *ngIf="password.errors?.minlength" style="color: red;font-size: 10px;" >Password needs to be 6 characters</span>
     </div>
     <ion-item>
-      <ion-input
-      placeholder="Name"
-      type="text"
-      formControlName="name"
-      clearInput="true"
-    ></ion-input>
+        <ion-input
+        placeholder="Name"
+        type="text"
+        formControlName="name"
+        clearInput="true"
+      ></ion-input>
     </ion-item>
     <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
       <span *ngIf="name.errors?.required" style="color: red;font-size: 10px;">Password is required</span>
       <span *ngIf="name.errors?.minlength" style="color: red;font-size: 10px;" >Password needs to be 6 characters</span>
     </div>
+    
   </form>
- 
+  
     <ion-button (click)="signUp()" expand="full">Sing up</ion-button>
     <ion-button (click)="signIn()" expand="full" color="secondary">Sing in</ion-button>
  

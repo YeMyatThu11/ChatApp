@@ -13,6 +13,7 @@ export class SettingMenuModalPage implements OnInit {
   room_id;
   room_name;
   currentRoom:any;
+  showRemoverBadge=false;
   user:Observable<any>;
   constructor(
     private modalCtrl: ModalController,
@@ -32,7 +33,9 @@ export class SettingMenuModalPage implements OnInit {
     this.user=this.chatService.getUserById(this.currentRoom.createdBy);
     console.log(this.user);
     this.getSinglePrivatgeRoom();
-    
+    if(this.isOwner()){
+      this.showRemoverBadge=true;
+    }
   }
   async goToAddPeople(){
     const modal= await this.modalCtrl.create({
@@ -102,4 +105,6 @@ export class SettingMenuModalPage implements OnInit {
       return false;
     }
   }
+  
+ 
 }

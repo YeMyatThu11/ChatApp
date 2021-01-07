@@ -38,6 +38,7 @@ export class RoomMessagePage implements OnInit {
   
   progressSize;
   progressMetadata:any;
+  showEmojiPicker = false;
   constructor(
     private aRoute: ActivatedRoute,
     private router: Router,
@@ -90,12 +91,31 @@ export class RoomMessagePage implements OnInit {
       return false;
     }
   }
+  isMessageImage(message){
+    if(message){
+      if(message.msg.includes('data:image/jpeg;base64') || (message.msg.includes('.png')&& !message.metadata.hasOwnProperty('size'))){
+        return true
+      }
+      else{
+        return false
+      }
+    }
+  }
+  isMessageFile(message){
+    if(message.msg.includes('https://firebasestorage.googleapis.com') && message.metadata.hasOwnProperty('size')){
+      return true
+    }
+    else{
+      return false
+    }
+  }
   getFileMetaData(metadata){
     // let meta : any = metadata
     if(metadata != undefined){
-          console.log('metadata is',metadata.size);
+      console.log('metadata is',metadata.size);
       return metadata.size;
-    } else return null
+    } 
+    else return null
    
 
   }
@@ -322,5 +342,9 @@ export class RoomMessagePage implements OnInit {
     this.isFileSend=false;
     this.isFileChoosen=false;
     this.file=null;
+  }
+  addSticker(event){
+    console.log('Sticker Url'+event.data)
+    this.chatService.addRoomMessage(this.room_id,event.data, this.chatService.currentUser.uid);
   }
 }
