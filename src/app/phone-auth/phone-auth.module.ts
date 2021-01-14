@@ -13,7 +13,7 @@ import { PhoneAuthPage } from './phone-auth.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    PhoneAuthPageRoutingModule
+    PhoneAuthPageRoutingModule,
   ],
   declarations: [PhoneAuthPage]
 })

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FirestoreService, Message } from '../services/firestore.service';
@@ -14,6 +14,7 @@ import firebase from 'firebase';
 import * as moment from 'moment';
 import { snapshotChanges } from '@angular/fire/database';
 import { Downloader, DownloadRequest } from '@ionic-native/downloader/ngx';
+import {IonContent} from '@ionic/angular';
 @Component({
   selector: 'app-room-message',
   templateUrl: './room-message.page.html',
@@ -27,7 +28,7 @@ export class RoomMessagePage implements OnInit {
   oneToOneChat = "false";
   logoImage: any;
   selectedFiles: FileList;
-  messages: Observable<any>;
+  messages:any[]=[];
   uploadTask;
   fileName;
   isFileopen=false;
@@ -39,6 +40,7 @@ export class RoomMessagePage implements OnInit {
   progressSize;
   progressMetadata:any;
   showEmojiPicker = false;
+  @ViewChild('scrollElement') content:IonContent;
   constructor(
     private aRoute: ActivatedRoute,
     private router: Router,
@@ -70,18 +72,35 @@ export class RoomMessagePage implements OnInit {
     console.log('user', this.chatService.currentUser.uid);
     if(!this.isFileSend){
       this.chatService.addRoomMessage(this.room_id, this.newMsg, this.chatService.currentUser.uid).then(() => {
-        this.newMsg = '';
+        
+        setTimeout(()=>{ this.updateScroll()},200)//wait 200ms for getRoomMesssage() and scroll to bottom
+       this.chatService.updateRecentMessage(this.room_id,this.newMsg);
+       this.newMsg = '';
       });
     }
     else{
       this.isFileSend=false;
       this.isFileopen=false;
-      this.uploadTask = this.upload(this.file)
+      this.uploadTask = this.upload(this.file);
     }
    
   }
   getMessages() {
-    this.messages = this.chatService.getRoomMessage(this.room_id);
+   
+   this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
+    console.log('data',data)
+    this.messages=[];
+    data.map(m=>this.messages.push(m))
+   });
+   console.log('messages',this.messages)
+   setTimeout(()=>{
+     this.updateScroll(400)
+   },500)
+   
+  }
+  updateScroll(time=0){
+    console.log('scrollToBottom');
+    this.content.scrollToBottom(time);
   }
   isSimpleMessage(message){
     if(!message.msg.includes('data:image/jpeg;base64') && !message.msg.includes('https://firebasestorage.googleapis.com')){
@@ -209,43 +228,7 @@ export class RoomMessagePage implements OnInit {
     }
    
   }
-  // async sendFile() {
-  //   this.fileChooser.open().then((uri)=>{
-  //     console.log('file url',uri);
-  //     // this.filePath.resolveNativePath(uri).then(async (path)=>{
-  //     //   console.log('path');
-  //     //   let filepath=path;
-  //     //   let fileFrag=filepath.split('/');
-  //     //   let fileName=fileFrag.pop();
-  //     //   filepath=fileFrag.join('/');
-  //     //   filepath=filepath+"/";
-  //     //   console.log('file path final',filepath);
-  //     //   console.log('fileName',fileName);
-  //     //   const buffer=await this.file.readAsArrayBuffer(filepath,fileName).then(buffer=>{
-  //     //     console.log(buffer)});
-  //     //   console.log(buffer)
 
-  //     // })
-  //     this.file.resolveLocalFilesystemUrl(uri).then(async (newurl)=>{
-  //       console.log('new url',newurl);
-  //       console.log('type of file',typeof(newurl));
-  //       console.log('type of file name',newurl.name)
-  //       let dirPath=newurl.nativeURL.substr(0, newurl.nativeURL.lastIndexOf('/') + 1);
-        
-  //       console.log(dirPath);
-  //       let type = this.getMimeType(newurl.name.split('.').pop());
-  //       const buffer = await this.file.readAsArrayBuffer(dirPath,newurl.name);
-  //       console.log(buffer)
-  //       const fileBlob = new Blob([buffer], type);
-  //       const randomId = Math.random()
-  //       .toString(36)
-  //       .substring(2, 8);
-  //       const uploadTask = firebase.storage().ref(`files/${new Date().getTime()}_${randomId}`).put(
-  //         fileBlob
-  //       );
-  //     }) 
-  //   })
-  // }
   getMimeType(fileExt) {
     if (fileExt == 'wav') return { type: 'audio/wav' };
     else if (fileExt == 'jpg') return { type: 'image/jpg' };
@@ -346,5 +329,19 @@ export class RoomMessagePage implements OnInit {
   addSticker(event){
     console.log('Sticker Url'+event.data)
     this.chatService.addRoomMessage(this.room_id,event.data, this.chatService.currentUser.uid);
+  }
+  loadData(e){
+    this.chatService.first=false;
+   this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
+     
+     data.map((message,i)=>{
+       console.log(i)
+      return this.messages.splice(i,0,message);
+     });
+     console.log(this.messages)
+     console.log(this.messages.length);
+     this.chatService.first=true;
+     e.target.complete();
+   })
   }
 }

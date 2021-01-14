@@ -47,6 +47,10 @@ const routes: Routes = [
     path: 'phone-auth',
     loadChildren: () => import('./phone-auth/phone-auth.module').then( m => m.PhoneAuthPageModule)
   },
+  {
+    path: 'phone-auth-sign-in',
+    loadChildren: () => import('./phone-auth-sign-in/phone-auth-sign-in.module').then( m => m.PhoneAuthSignInPageModule)
+  },
 
   
 ];

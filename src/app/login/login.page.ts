@@ -5,6 +5,7 @@ import { AlertController,NavController, LoadingController } from '@ionic/angular
 import { FirestoreService } from '../services/firestore.service';
 import {Md5} from 'ts-md5/dist/md5';
 import * as firebase from 'firebase';
+import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ngx';
 const md5=new Md5();
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private chatService: FirestoreService,
-    private navCtrl:NavController
+    private navCtrl:NavController,
+     
   ) {}
  
   ngOnInit() {

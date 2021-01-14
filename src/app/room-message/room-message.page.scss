@@ -105,5 +105,20 @@ ion-content {
     color: #fff;
     right: 10px;
     top: 6px;
-
+}
+.input_field{
+  display: flex;
+  padding: 10px 4px;
+  justify-content: center;
+  align-items: center;
+  ion-icon{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  ion-input{
+    border: 1px solid #000;
+    flex: 1;
+    border-radius: 20px;
+  }
 }

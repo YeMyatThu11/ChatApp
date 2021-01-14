@@ -9,14 +9,15 @@
   
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="loadData($event)"  >
+<ion-content class="ion-padding" #scrollElement padding [scrollEvents]="true">
+  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="loadData($event)"  >
     <ion-infinite-scroll-content loadingSpinner="bubbles" >
 
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll> -->
+  </ion-infinite-scroll>
     <ion-grid >
-      <ion-row style="margin-top: 20px;" *ngFor="let message of messages | async">
+      <!-- <ion-button (click)="loadData()">Load More</ion-button> -->
+      <ion-row style="margin-top: 20px;" *ngFor="let message of messages ">
         <ion-col size="10"
           [offset]="message.myMsg ? 2 : 0"
           > 
@@ -101,20 +102,21 @@
     </div>
     
   </ion-item>
-  <ion-item>
-   
+  <div class="input_field">
       <ion-icon  (click)="sendImage()" style="margin-right: 10px;" name="image-outline"></ion-icon>
       <ion-icon name="folder-outline" (click)="openFile()" style="margin-right: 10px;" ></ion-icon>
       <ion-icon (click)="showEmojiPicker = !showEmojiPicker" color="" name="happy" style="font-size: 20px;"></ion-icon>
 
-      <ion-input  [(ngModel)]="newMsg"></ion-input>
+     
+        <ion-input  [(ngModel)]="newMsg"></ion-input>
+     
         <ion-button expand="block" fill="clear" color="primary" [disabled]="checkMsgEmpty()"
           class="msg-btn" (click)="sendMessage()">
           <ion-icon name="send" slot="icon-only"></ion-icon>
         </ion-button>
-  </ion-item>
+      </div>
+  
   <div class="emojiContainer" [style.height]="showEmojiPicker?'240px':'0px'">
-               
     <app-stamp (onGifSelect)="addSticker($event)"></app-stamp>
 </div>
 </ion-footer>

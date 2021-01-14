@@ -28,10 +28,20 @@ export class MessagesPage implements OnInit {
  
     ngOnInit() {
       this.users=this.chatService.getUsers();
-      this.chatService.getUserById(this.chatService.currentUser.uid).subscribe(data=>{
+      this.chatService.getUserById(this.chatService.currentUser.uid).
+      subscribe(data=>{
         this.currentUser=data;
-        console.log(this.currentUser)
+        console.log(this.currentUser);
       });
+      setTimeout(()=>{
+        if(this.currentUser){
+          console.log('user id for presence',this.currentUser.uid);
+          this.chatService.detectUserPresence(this.currentUser.uid);
+        }
+        else{
+          console.log('aa')
+        }
+      },3000)
     }
     onSearch(e){
       if (e.target.value.includes("@gmail.com")) {
@@ -57,7 +67,7 @@ export class MessagesPage implements OnInit {
       console.log(this.chatService.currentUser);
       console.log(memberNameList);
       console.log(this.currentuserId)
-      this.chatService.addPrivateRoomWithId('Private User Chat','desc','onetoone',this.currentuserId,userIdList,"default",memberNameList,userIdList);
+      this.chatService.addPrivateRoomWithId('Private User Chat','desc','onetoone',this.currentuserId,userIdList,"default",memberNameList,this.privateRoomId);
       this.router.navigate(['room-message',{room_id:this.privateRoomId,room_name:user.name,oneToOneChat:true}])
     }
 }
