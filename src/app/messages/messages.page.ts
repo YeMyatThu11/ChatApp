@@ -31,7 +31,6 @@ export class MessagesPage implements OnInit {
       this.chatService.getUserById(this.chatService.currentUser.uid).
       subscribe(data=>{
         this.currentUser=data;
-        console.log(this.currentUser);
       });
       setTimeout(()=>{
         if(this.currentUser){

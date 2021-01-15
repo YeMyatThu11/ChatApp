@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import {AngularFireDatabase,AngularFireObject,AngularFireList}  from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map,mergeMap ,mergeAll} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import firebase from 'firebase';
 import { Md5 } from 'ts-md5/dist/md5';
@@ -55,7 +56,11 @@ export class FirestoreService {
     { name: "Bear", uid: "eH8Af4DAxIaa79dnvG6Rsc46fmi1", checked: false },
   ]
 
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private afs: AngularFirestore,
+    private db:AngularFireDatabase
+  ) {
     this.afAuth.onAuthStateChanged((user) => {
       this.currentUser = user;
     })
@@ -88,16 +93,12 @@ export class FirestoreService {
       if (snapshot.val() == false) {
         console.log('user active developing', this.currentUser);
         console.log('user active ');
-        this.userStatusFireStoreRef.update({
-          status: isOfflineForFireStore
-        })
+        
         return;
       }
       this.userStatusRealTimeDbRef.onDisconnect().set(isOfflineForDatabase).then(()=>{
         firebase.database().ref('/status/' + uid).set(isOnlineForDatabase);
-        this.userStatusFireStoreRef.update({
-          status: isOnlineForFireStore
-        });
+       
       });
     })
 
@@ -117,7 +118,7 @@ export class FirestoreService {
       email: credential.user.email,
       profile: `http://gravatar.com/avatar/${md5.appendStr(credential.user.email).end()}?d=identicon`,
       name: name,
-      status: {}
+      
     })
   }
   async signUpWithPhNo(uid, email, name): Promise<any> {
@@ -328,7 +329,28 @@ export class FirestoreService {
     )
   }
   getUsers() {
-    return this.afs.collection('users', ref => ref.orderBy('name')).valueChanges({ idField: 'uid' }) as Observable<User[]>;
+    return this.afs.collection('users', ref => ref.orderBy('name')).valueChanges({ idField: 'uid' }).pipe(
+      map(users=>{
+        var test = [];
+        users.map((user:any)=>{
+          if(this.currentUser.uid){
+            this.db.object(`status/${user.uid}`).valueChanges().subscribe((data:any)=>{
+              if(data){
+                 user={...user,state:data.state}
+                 test.push(user);
+              }
+              else{
+                user={...user,state:'offline'}
+                test.push(user);
+              }
+            });
+          }
+        })
+        
+        return test;
+        
+      })
+    );
   }
   getUserById(uid) {
     return this.afs.doc(`users/${uid}`).valueChanges();
