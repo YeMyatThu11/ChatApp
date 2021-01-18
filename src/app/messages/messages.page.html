@@ -17,8 +17,8 @@
   <ion-list *ngFor="let user of users |async" >
       <ion-item (click)="goToMessage(user)">
         <img [src]="user.profile" style="width: 40px;height: 40px;border-radius: 50%;margin: 15px 30px 15px 0;object-fit: cover;" alt="">
-        <ion-badge color="primary" *ngIf="user.state=='online'">Active</ion-badge>
-      <ion-badge color="danger" *ngIf="user.state=='offline'">Offline</ion-badge>
+        <span class="active" *ngIf="user.state=='online'"> </span>
+        <span class="offline" *ngIf="user.state=='offline'"></span>
         
         {{user.name}}
       </ion-item>

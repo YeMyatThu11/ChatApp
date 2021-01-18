@@ -68,14 +68,13 @@ export class RoomMessagePage implements OnInit {
     console.log(this.oneToOneChat)
   }
   sendMessage() {
-    console.log('room', this.room_id);
-    console.log('user', this.chatService.currentUser.uid);
+   
     if(!this.isFileSend){
       this.chatService.addRoomMessage(this.room_id, this.newMsg, this.chatService.currentUser.uid).then(() => {
-        
+       
         setTimeout(()=>{ this.updateScroll()},200)//wait 200ms for getRoomMesssage() and scroll to bottom
-       this.chatService.updateRecentMessage(this.room_id,this.newMsg);
-       this.newMsg = '';
+        this.chatService.updateRecentMessage(this.room_id,this.newMsg);
+        this.newMsg = '';
       });
     }
     else{
@@ -83,14 +82,15 @@ export class RoomMessagePage implements OnInit {
       this.isFileopen=false;
       this.uploadTask = this.upload(this.file);
     }
-   
   }
   getMessages() {
    
    this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
     console.log('data',data)
     this.messages=[];
-    data.map(m=>this.messages.push(m))
+    data.map((m,index)=>{
+      return this.messages.push(m)
+    })
    });
    console.log('messages',this.messages)
    setTimeout(()=>{
@@ -279,8 +279,14 @@ export class RoomMessagePage implements OnInit {
         console.log(url);
         console.log(metadata)
         this.chatService.addRoomMessageWithFileMetadata(this.room_id,url, this.chatService.currentUser.uid,metadata).then(() => {
-          console.log('done')
+          setTimeout(()=>{ this.updateScroll()},200)//wait 200ms for getRoomMesssage() and scroll to bottom
         });
+        // this.chatService.addRoomMessage(this.room_id, this.newMsg, this.chatService.currentUser.uid).then(() => {
+        
+        //   setTimeout(()=>{ this.updateScroll()},200)//wait 200ms for getRoomMesssage() and scroll to bottom
+        //  this.chatService.updateRecentMessage(this.room_id,this.newMsg);
+        //  this.newMsg = '';
+        // });
       });
     });
   }
@@ -335,7 +341,8 @@ export class RoomMessagePage implements OnInit {
    this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
      
      data.map((message,i)=>{
-       console.log(i)
+       console.log(i);
+       this.messages.push(message)
       return this.messages.splice(i,0,message);
      });
      console.log(this.messages)

@@ -230,8 +230,6 @@ export class FirestoreService {
     })
     )
   }
-
-
   addRoomMessage(roomID, msg, uid) {
     return this.afs.collection(`room-messages/${roomID}/messages`).add({
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -333,22 +331,28 @@ export class FirestoreService {
       map(users=>{
         var test = [];
         users.map((user:any)=>{
-          if(this.currentUser.uid){
+          
             this.db.object(`status/${user.uid}`).valueChanges().subscribe((data:any)=>{
               if(data){
                  user={...user,state:data.state}
-                 test.push(user);
+                 const index=test.findIndex(userList=>{
+                   return userList.uid==user.uid});
+                 if(index!==-1){
+                  test[index]=user;
+                 }
+                 else{
+                  test.push(user);
+                 }
               }
               else{
                 user={...user,state:'offline'}
                 test.push(user);
               }
             });
-          }
+          
         })
         
         return test;
-        
       })
     );
   }

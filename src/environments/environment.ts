@@ -13,6 +13,16 @@ export const environment = {
     appId: "1:655881664532:web:862f8c88ce7823442f8f01",
     measurementId: "G-7T74V8WHSQ"
   }
+
+  //  firebaseConfig : {
+  //   apiKey: "AIzaSyC-uahLh9EbA67xg3bk5qgzyMpUC69UOiU",
+  //   authDomain: "chat-app-2-3c7dc.firebaseapp.com",
+  //   projectId: "chat-app-2-3c7dc",
+  //   storageBucket: "chat-app-2-3c7dc.appspot.com",
+  //   messagingSenderId: "363896716425",
+  //   appId: "1:363896716425:web:13a48a962c53f061181a58",
+  //   measurementId: "G-WWL8534PMK"
+  // }
 };
 
 /*

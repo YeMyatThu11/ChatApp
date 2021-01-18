@@ -10,11 +10,11 @@
 </ion-header>
 
 <ion-content class="ion-padding" #scrollElement padding [scrollEvents]="true">
-  <ion-infinite-scroll threshold="-50px" position="top" (ionInfinite)="loadData($event)"  >
+  <!-- <ion-infinite-scroll threshold="3px" position="top" (ionInfinite)="loadData($event)"  >
     <ion-infinite-scroll-content loadingSpinner="bubbles" >
 
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll> -->
     <ion-grid >
       <!-- <ion-button (click)="loadData()">Load More</ion-button> -->
       <ion-row style="margin-top: 20px;" *ngFor="let message of messages ">

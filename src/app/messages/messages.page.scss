@@ -2,3 +2,21 @@ ion-searchbar{
     border-radius: 10px!important;
     margin-top: 3px;
 }
+.active{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background:#18ea6c;
+    position: absolute;
+    left: 32px;
+    bottom: 16px;
+}
+.offline{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background:red;
+    position: absolute;
+    left: 32px;
+    bottom: 16px;
+}
