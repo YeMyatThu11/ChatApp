@@ -27,7 +27,10 @@ import { FirebaseAuthentication } from '@ionic-native/firebase-authentication/ng
 import { environment } from '../environments/environment';
 import { ScrollableDirective } from './scrollable.directive';
 
+
 import { NgCircleProgressModule } from 'ng-circle-progress';
+//file transffer
+import { FileTransfer,FileTransferObject  } from '@ionic-native/file-transfer/ngx';
 
 @NgModule({
   declarations: [AppComponent, ScrollableDirective],
@@ -63,7 +66,9 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
     File,
     FilePath,
     Downloader,
-    FirebaseAuthentication
+    FirebaseAuthentication,
+    FileTransfer,
+    FileTransferObject
     
   ],
   

@@ -2,19 +2,22 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FirestoreService, Message } from '../services/firestore.service';
+import {FileDownloadService} from '../services/file-download.service';
 import { ModalController } from '@ionic/angular';
 import { GroupSettingPage } from '../group-setting/group-setting.page';
+
 import { SettingMenuModalPage } from '../setting-menu-modal/setting-menu-modal.page';
 import { Camera, CameraOptions, PictureSourceType } from '@ionic-native/Camera/ngx';
 import { ActionSheetController, ToastController, Platform, LoadingController } from '@ionic/angular';
-// import { File, FileEntry } from '@ionic-native/File/ngx';
+
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import firebase from 'firebase';
 import * as moment from 'moment';
-import { snapshotChanges } from '@angular/fire/database';
+import { FileTransfer,FileTransferObject} from '@ionic-native/file-transfer/ngx';
 import { Downloader, DownloadRequest } from '@ionic-native/downloader/ngx';
 import {IonContent} from '@ionic/angular';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-room-message',
   templateUrl: './room-message.page.html',
@@ -36,10 +39,11 @@ export class RoomMessagePage implements OnInit {
   file:File;
   progressbar:number;
   isFileSend=false;
-  
   progressSize;
   progressMetadata:any;
   showEmojiPicker = false;
+  fileTransfer: FileTransferObject;
+
   @ViewChild('scrollElement') content:IonContent;
   constructor(
     private aRoute: ActivatedRoute,
@@ -50,11 +54,11 @@ export class RoomMessagePage implements OnInit {
     private toastController: ToastController,
     private modalCtrl: ModalController,
     private camera: Camera,
-    // private file: File,
+    private fileDownloadService:FileDownloadService,
+    private transfer: FileTransfer,
     private filePath: FilePath,
     private fileChooser:FileChooser,
     private downloader:Downloader
-
   ) {
     this.aRoute.params.subscribe(data => {
       this.room_id = data.room_id;
@@ -88,9 +92,7 @@ export class RoomMessagePage implements OnInit {
    this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
     console.log('data',data)
     this.messages=[];
-    data.map((m,index)=>{
-      return this.messages.push(m)
-    })
+    data.map(m=>this.messages.push(m))
    });
    console.log('messages',this.messages)
    setTimeout(()=>{
@@ -112,10 +114,12 @@ export class RoomMessagePage implements OnInit {
   }
   isMessageImage(message){
     if(message){
-      if(message.msg.includes('data:image/jpeg;base64') || (message.msg.includes('.png')&& !message.metadata.hasOwnProperty('size'))){
+      if(message.msg.includes('data:image/jpeg;base64') || (message.msg.includes('.png')&& !message.metadata.hasOwnProperty('size')) ){
+        
         return true
       }
       else{
+        
         return false
       }
     }
@@ -196,22 +200,23 @@ export class RoomMessagePage implements OnInit {
     this.camera.getPicture(options).then((imageData) => {
       this.logoImage = 'data:image/jpeg;base64,' + imageData;
 
-      // this.chatService.addRoomMessage(this.room_id,this.logoImage,this.chatService.currentUser.uid).then(() => {
+      this.chatService.addRoomMessage(this.room_id,this.logoImage,this.chatService.currentUser.uid).then(() => {
 
-      console.log(this.logoImage)
-      const storageRef = firebase.storage().ref().child('/images');
-      const uploadTask = storageRef.putString(this.logoImage);
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, (snapshot) => {
-        console.log(snapshot);
-      }, (error) => {
+     
+      // const storageRef = firebase.storage().ref().child('/images');
+      // const uploadTask = storageRef.putString(this.logoImage);
+      // uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, (snapshot) => {
+        
+      // }, (error) => {
 
-      },
-        () => {
-          this.saveDownloadUrl(storageRef.getDownloadURL)
-        })
+      // },
+      //   () => {
+      //     console.log(this.logoImage)
+      //     this.saveDownloadUrl(storageRef.getDownloadURL)
+      //   })
 
-      // });
-      console.log(this.logoImage)
+      });
+     
     }, (err) => {
       console.log('error', err)
     });
@@ -291,25 +296,43 @@ export class RoomMessagePage implements OnInit {
     });
   }
   downloadFile(url,metadata){
-    if(url){
-      console.log(url,metadata);
-      let request:DownloadRequest={
-        uri:url,
-        title:metadata.name,
-        description: '',
-        mimeType: metadata.type,
-        visibleInDownloadsUi: true,
-        destinationInExternalFilesDir: {
-            dirType: 'Download',
-            subPath: ''
-        }
-      }
-      this.downloader.download(request).then(location=>{
-        console.log('file downloaded at ',location);
-      }).catch(error=>{
-        console.log('error',error)
-      })
-    }
+    // if(url){
+    //   console.log(url,metadata);
+    //   let request:DownloadRequest={
+    //     uri:url,
+    //     title:metadata.name,
+    //     description: '',
+    //     mimeType: metadata.type,
+    //     visibleInDownloadsUi: true,
+    //     destinationInExternalFilesDir: {
+    //         dirType: 'Download',
+    //         subPath: ''
+    //     }
+    //   }
+    //   this.downloader.download(request).then(location=>{
+    //     console.log('file downloaded at ',location);
+    //   }).catch(error=>{
+    //     console.log('error',error)
+    //   })
+    // }
+   let uri=encodeURI(url);
+   this.fileTransfer=this.transfer.create();
+   this.fileTransfer.download(url,`file:///storage/emulated/0/Android/data/com.bib.kyaung/files/Download/${metadata.name}`, true).then(
+     (entry)=>{
+       console.log('download complete',entry.toURL());
+     }
+   ).catch(error=>{
+     console.log('file donwload error',error)
+   })
+  //  this.transfer.download(uri,`file:///storage/emulated/0/Android/data/com.bib.kyaung/files/Download/${metadata.name}.${metadata.type}`,
+  //  (entry)=>{
+  //   console.log("donwload complete"+entry.toURL());
+  //  },
+  //  (error)=>{
+  //   console.log('download error',error);
+  //  })
+
+
   }
   changeToMB(byte){
     return Math.round(byte/1024/1024 *100)/100
@@ -337,16 +360,20 @@ export class RoomMessagePage implements OnInit {
     this.chatService.addRoomMessage(this.room_id,event.data, this.chatService.currentUser.uid);
   }
   loadData(e){
+    let prevMsgLength=this.messages.length;
+    console.log('message previous length',prevMsgLength)
     this.chatService.first=false;
    this.chatService.getRoomMessage(this.room_id).subscribe(data=>{
      
      data.map((message,i)=>{
        console.log(i);
-       this.messages.push(message)
-      return this.messages.splice(i,0,message);
+      if(this.messages.length<prevMsgLength+10){
+        return this.messages.splice(i,0,message);
+      }
+     
      });
      console.log(this.messages)
-     console.log(this.messages.length);
+     console.log('message length now',this.messages.length);
      this.chatService.first=true;
      e.target.complete();
    })
