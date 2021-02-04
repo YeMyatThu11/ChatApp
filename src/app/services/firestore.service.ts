@@ -25,6 +25,7 @@ export interface Message {
   myMsg: boolean;
   profile: string;
   metadata: any;
+  
 }
 export interface Room {
   createdAt: firebase.firestore.FieldValue;
@@ -48,6 +49,8 @@ export class FirestoreService {
   first = true;
   messageCollection: AngularFirestoreCollection;
   recentMessage = "";
+  iatTime:any;
+  lastOnline;
   suggestedUser: any[] = [
     { name: "Ag Ag", uid: "h3aU3Z0Jr9hYPGNMqm4PCXFqJIt1", checked: false },
     { name: "Bo Bo", uid: "TJPL806VoZh5yWObldnm3rAr3332", checked: false },
@@ -63,6 +66,59 @@ export class FirestoreService {
   ) {
     this.afAuth.onAuthStateChanged((user) => {
       this.currentUser = user;
+      if(user!==null){
+        if(localStorage.getItem('lastOnline')){
+          if(Date.now()>this.lastOnline){
+            console.log('greater than last onlinne')
+            localStorage.setItem('lastOnline',Date.now().toString());
+          }
+          else{
+            this.lastOnline=localStorage.getItem('lastOnline');
+            console.log('last online',this.lastOnline);
+            console.log('current time',Date.now());
+            let sessionExpire=(1000*60+parseInt(this.lastOnline))-Date.now();
+            setTimeout(()=>{
+              console.log('Expired Session',sessionExpire);
+              this.signOut().then(()=>{
+                console.log('logged out');
+                alert("Please login again")
+              })
+            },sessionExpire)
+          }
+        }
+        else{
+          this.lastOnline=Date.now().toString();
+          localStorage.setItem('lastOnline',this.lastOnline);
+        }
+        
+        
+        // user.getIdTokenResult().then((token)=>{
+        //   if(localStorage.getItem('iatTime')){
+        //     this.iatTime=localStorage.getItem('iatTime');
+        //     console.log('claim iat time from local storage',this.iatTime)
+        //   }
+        //   else{
+        //     this.iatTime=token.claims.iat*1000;
+        //     localStorage.setItem('iatTime',this.iatTime)
+        //   }
+        //   const sessionDuration = 1000 *20;
+        //   console.log('User sign up time',this.iatTime);
+        //   console.log('claim iat time',token.claims.iat*1000);
+        //   const millisecondsUntilExpiration = (sessionDuration +this.iatTime)- Date.now();
+        //   if(millisecondsUntilExpiration>0){
+        //     this.iatTime = token.claims.iat*1000;
+        //     localStorage.setItem('iatTime',this.iatTime);
+        //     console.log('claim iat time if there is still time left',this.iatTime)
+        //   }
+        //    setTimeout(() => this.signOut().then(
+        //      ()=>{
+        //       console.log('user session is over');
+        //       alert("Please Login again");
+              
+        //      }  
+        //     ), millisecondsUntilExpiration);
+        // })
+      }
     })
   }
   detectUserPresence(uid) {
