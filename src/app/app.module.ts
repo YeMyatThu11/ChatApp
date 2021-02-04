@@ -15,7 +15,8 @@ import { FilePath } from '@ionic-native/file-path/ngx';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { Downloader } from '@ionic-native/downloader/ngx';
-
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id/ngx';
 //firebase
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -68,7 +69,9 @@ import { FileTransfer,FileTransferObject  } from '@ionic-native/file-transfer/ng
     Downloader,
     FirebaseAuthentication,
     FileTransfer,
-    FileTransferObject
+    FileTransferObject,
+    LocalNotifications,
+    UniqueDeviceID
     
   ],
   
