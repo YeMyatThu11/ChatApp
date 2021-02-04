@@ -6,7 +6,7 @@ import { switchMap, map,mergeMap ,mergeAll} from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import firebase from 'firebase';
 import { Md5 } from 'ts-md5/dist/md5';
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 export interface User {
@@ -62,11 +62,12 @@ export class FirestoreService {
   constructor(
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private db:AngularFireDatabase
+    private db:AngularFireDatabase,
+    private router: Router,
   ) {
     this.afAuth.onAuthStateChanged((user) => {
       this.currentUser = user;
-      if(user!==null){
+      console.log('auth state change worked',user);
         if(localStorage.getItem('lastOnline')){
           if(Date.now()>this.lastOnline){
             console.log('greater than last onlinne')
@@ -76,15 +77,17 @@ export class FirestoreService {
             this.lastOnline=localStorage.getItem('lastOnline');
             console.log('last online',this.lastOnline);
             console.log('current time',Date.now());
-            let sessionExpire=(1000*60+parseInt(this.lastOnline))-Date.now();
+            let sessionExpire=(1000*60*60+parseInt(this.lastOnline))-Date.now();
             if(sessionExpire>0){
-              
+                localStorage.setItem('lastOnline',Date.now().toString());
             }
             setTimeout(()=>{
               console.log('Expired Session',sessionExpire);
               this.signOut().then(()=>{
                 console.log('logged out');
-                alert("Please login again")
+                alert("Please login again");
+                localStorage.clear();
+                this.router.navigateByUrl('/');
               })
             },sessionExpire)
           }
@@ -93,35 +96,7 @@ export class FirestoreService {
           this.lastOnline=Date.now().toString();
           localStorage.setItem('lastOnline',this.lastOnline);
         }
-        
-        
-        // user.getIdTokenResult().then((token)=>{
-        //   if(localStorage.getItem('iatTime')){
-        //     this.iatTime=localStorage.getItem('iatTime');
-        //     console.log('claim iat time from local storage',this.iatTime)
-        //   }
-        //   else{
-        //     this.iatTime=token.claims.iat*1000;
-        //     localStorage.setItem('iatTime',this.iatTime)
-        //   }
-        //   const sessionDuration = 1000 *20;
-        //   console.log('User sign up time',this.iatTime);
-        //   console.log('claim iat time',token.claims.iat*1000);
-        //   const millisecondsUntilExpiration = (sessionDuration +this.iatTime)- Date.now();
-        //   if(millisecondsUntilExpiration>0){
-        //     this.iatTime = token.claims.iat*1000;
-        //     localStorage.setItem('iatTime',this.iatTime);
-        //     console.log('claim iat time if there is still time left',this.iatTime)
-        //   }
-        //    setTimeout(() => this.signOut().then(
-        //      ()=>{
-        //       console.log('user session is over');
-        //       alert("Please Login again");
-              
-        //      }  
-        //     ), millisecondsUntilExpiration);
-        // })
-      }
+      
     })
   }
   detectUserPresence(uid) {
@@ -192,6 +167,7 @@ export class FirestoreService {
 
   signIn({ email, password }) {
     return this.afAuth.signInWithEmailAndPassword(email, password);
+    
   }
 
   signOut(): Promise<void> {
