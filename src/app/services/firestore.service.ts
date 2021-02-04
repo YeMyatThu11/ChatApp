@@ -77,6 +77,9 @@ export class FirestoreService {
             console.log('last online',this.lastOnline);
             console.log('current time',Date.now());
             let sessionExpire=(1000*60+parseInt(this.lastOnline))-Date.now();
+            if(sessionExpire>0){
+              
+            }
             setTimeout(()=>{
               console.log('Expired Session',sessionExpire);
               this.signOut().then(()=>{
